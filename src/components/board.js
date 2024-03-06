@@ -1,22 +1,7 @@
 import { useCallback, useState } from "react";
 import { Row } from "./row";
 import { GameContext } from "../contexts/game";
-import { checkWinner } from "../utils/game";
-
-const boardSize = 3;
-
-function initializeBoard() {
-  const result = [];
-
-  for (let i = 0; i < boardSize; i++) {
-    result[i] = [];
-    for (let j = 0; j < boardSize; j++) {
-      result[i][j] = "";
-    }
-  }
-
-  return result;
-}
+import { checkWinner, initializeBoard } from "../utils/game";
 
 export function Board({}) {
   const [board, setBoard] = useState(initializeBoard());

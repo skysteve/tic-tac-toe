@@ -1,3 +1,18 @@
+const boardSize = 5;
+
+export function initializeBoard() {
+  const result = [];
+
+  for (let i = 0; i < boardSize; i++) {
+    result[i] = [];
+    for (let j = 0; j < boardSize; j++) {
+      result[i][j] = "";
+    }
+  }
+
+  return result;
+}
+
 export function checkWinner(board, lastX, lastY) {
   const lastPlayer = board[lastX][lastY];
 
