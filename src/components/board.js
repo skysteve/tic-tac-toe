@@ -5,7 +5,7 @@ import { GameContext } from "../contexts/game";
 export function Board({}) {
   const {
     state: {
-      data: { board, player, winner },
+      data: { board, winner },
     },
   } = useContext(GameContext);
 
@@ -17,10 +17,6 @@ export function Board({}) {
 
   return (
     <>
-      <div className="alert alert-info">
-        <strong>Player</strong> {player}
-      </div>
-
       {winner && (
         <div className="alert alert-success">
           <strong>Winner</strong> {winner}

@@ -5,7 +5,7 @@ export function Square({ value = "", rowCount, cellCount }) {
   const {
     dispatch,
     state: {
-      data: { winner },
+      data: { winner, winningCells },
     },
   } = useContext(GameContext);
 
@@ -16,12 +16,14 @@ export function Square({ value = "", rowCount, cellCount }) {
       return "lightgray";
     }
 
-    if (winner === value) {
-      return "lightgreen";
+    if (winningCells[rowCount]) {
+      if (winningCells[rowCount].includes(cellCount)) {
+        return "lightgreen";
+      }
     }
 
     return value === "X" ? "lightblue" : "lightcoral";
-  }, [winner, value]);
+  }, [value, winningCells, rowCount, cellCount]);
 
   return (
     <div

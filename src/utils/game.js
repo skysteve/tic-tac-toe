@@ -13,12 +13,17 @@ export function initializeBoard(boardSize) {
 
 export function checkWinner(board, lastX, lastY) {
   const lastPlayer = board[lastX][lastY];
+  let winningCells = {};
 
   // checkRow
   const rowMatch = board[lastX].every((c) => c === lastPlayer);
 
   if (rowMatch) {
-    return lastPlayer;
+    winningCells[lastX] = [];
+    for (let i = 0; i < board[lastX].length; i++) {
+      winningCells[lastX].push(i);
+    }
+    return { winner: lastPlayer, winningCells };
   }
 
   // checkCol
@@ -32,7 +37,10 @@ export function checkWinner(board, lastX, lastY) {
   }
 
   if (colMatch) {
-    return lastPlayer;
+    for (let i = 0; i < board[lastX].length; i++) {
+      winningCells[i] = [lastY];
+    }
+    return { winner: lastPlayer, winningCells };
   }
 
   // check diagonals
@@ -42,16 +50,16 @@ export function checkWinner(board, lastX, lastY) {
     (lastX !== 0 && lastX !== board.length - 1) ||
     (lastY !== 0 && lastY !== board.length - 1)
   ) {
-    console.log("not here", lastX, lastY);
-    return;
+    return {};
   }
 
   // work through diagonals
   for (let i = 0, j = 0; i < board.length; i++, j++) {
     if (board[i][j] !== lastPlayer) {
-      return;
+      return {};
     }
+    winningCells[i] = [j];
   }
 
-  return lastPlayer;
+  return { winner: lastPlayer, winningCells };
 }

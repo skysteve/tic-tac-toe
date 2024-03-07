@@ -8,8 +8,15 @@ export const INITIAL_STATE = {
     board: initializeBoard(DEFAULT_BOARD_SIZE),
     player: "X",
     winner: "",
+    winningCells: {}, // looks like { rowID: [matchingColumn, matchingColumn]} e.g. { 1: [0, 1, 2]} or {0: [1], 1: [1], 2: [1]} or {0: [0], 1: [1], 2: [2]}
   },
 };
+
+/*
+ next:
+  * add multi-game scoreboard, e.g. player 1 won 4, player 2 won 5
+  * no more moves - tied game
+ */
 
 export function gameReducer(currentState, { type, data }) {
   console.log("action", type, data);
@@ -18,9 +25,10 @@ export function gameReducer(currentState, { type, data }) {
       return {
         ...currentState,
         data: {
-          ...currentState.data,
+          ...INITIAL_STATE.data,
           boardSize: data,
           board: initializeBoard(data),
+          player: currentState.data.player,
         },
       };
     }
@@ -31,6 +39,7 @@ export function gameReducer(currentState, { type, data }) {
           ...INITIAL_STATE.data,
           boardSize: currentState.data.boardSize,
           board: initializeBoard(currentState.data.boardSize),
+          player: currentState.data.player,
         },
       };
     }
@@ -51,7 +60,7 @@ export function gameReducer(currentState, { type, data }) {
           ...currentState.data,
           board,
           player: currentPlayer === "X" ? "O" : "X",
-          winner: checkWinner(board, x, y),
+          ...checkWinner(board, x, y),
         },
       };
     }

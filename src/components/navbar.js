@@ -5,7 +5,12 @@ import { GameContext } from "../contexts/game";
 const availableBoardSizes = [3, 5, 7, 9];
 
 export function NavBar() {
-  const { dispatch } = useContext(GameContext);
+  const {
+    dispatch,
+    state: {
+      data: { player, winner },
+    },
+  } = useContext(GameContext);
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -62,6 +67,23 @@ export function NavBar() {
               </a>
             </li> */}
           </ul>
+          {winner ? null : (
+            <ul class="nav nav-pills navbar-right">
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  aria-current="page"
+                  href="#"
+                  style={{
+                    backgroundColor:
+                      player === "X" ? "lightblue" : "lightcoral",
+                  }}
+                >
+                  Player: {player}
+                </a>
+              </li>
+            </ul>
+          )}
         </div>
       </div>
     </nav>
