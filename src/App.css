@@ -9,3 +9,11 @@
 .game-board {
   max-width: calc(100vw * 0.4);
 }
+
+.dropdown-item {
+  cursor: pointer;
+}
+
+.nav-link {
+  cursor: pointer;
+}

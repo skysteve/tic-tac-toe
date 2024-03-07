@@ -1,15 +1,68 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import { useContext } from "react";
+import { GameContext } from "../contexts/game";
+
+const availableBoardSizes = [3, 5, 7, 9];
+
 export function NavBar() {
+  const { dispatch } = useContext(GameContext);
+
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
-        <a className="navbar-brand" href="#">
-          Tic Tac Toe
-        </a>
-        {/* <ul className="nav navbar-nav">
-          <li className="active">
-            <a href="#">Reset</a>
-          </li>
-        </ul> */}
+        <span className="navbar-brand">Tic Tac Toe</span>
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            {/* <li className="nav-item">
+              <a className="nav-link active" aria-current="page" href="#">
+                Home
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="#">
+                Link
+              </a>
+            </li> */}
+            <li className="nav-item dropdown">
+              <a
+                className="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Board Size
+              </a>
+              <ul className="dropdown-menu">
+                {availableBoardSizes.map((size) => (
+                  <li key={size}>
+                    <span
+                      className="dropdown-item"
+                      onClick={() =>
+                        dispatch({ type: "SET_BOARD_SIZE", data: size })
+                      }
+                    >
+                      {size}x{size}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </li>
+            <li className="nav-item">
+              <span
+                className="nav-link active"
+                onClick={() => dispatch({ type: "RESET" })}
+              >
+                Reset
+              </span>
+            </li>
+            {/* <li className="nav-item">
+              <a className="nav-link disabled" aria-disabled="true">
+                Disabled
+              </a>
+            </li> */}
+          </ul>
+        </div>
       </div>
     </nav>
   );

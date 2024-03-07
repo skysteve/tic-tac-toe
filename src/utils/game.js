@@ -1,6 +1,4 @@
-const boardSize = 5;
-
-export function initializeBoard() {
+export function initializeBoard(boardSize) {
   const result = [];
 
   for (let i = 0; i < boardSize; i++) {
