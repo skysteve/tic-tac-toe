@@ -1,39 +1,13 @@
-import { useCallback, useState } from "react";
+import { useContext } from "react";
 import { Row } from "./row";
 import { GameContext } from "../contexts/game";
-import { checkWinner, initializeBoard } from "../utils/game";
 
 export function Board({}) {
-  const [board, setBoard] = useState(initializeBoard());
-  const [player, setPlayer] = useState("X");
-  const [winner, setWinner] = useState("");
-
-  const onCellClick = useCallback(
-    ({ x, y }) => {
-      // check for existing item
-      if (board[x][y] || winner) {
-        return;
-      }
-
-      setBoard((prev) => {
-        const clone = JSON.parse(JSON.stringify(prev));
-        clone[x][y] = player;
-
-        setWinner(checkWinner(clone, x, y));
-        return clone;
-      });
-      setPlayer((prev) => (prev === "X" ? "O" : "X"));
+  const {
+    state: {
+      data: { board, winner },
     },
-    [board, player, winner]
-  );
-
-  const resetGame = useCallback(() => {
-    // TODO confirmation
-    setBoard(initializeBoard());
-    setWinner("");
-  }, []);
-
-  const context = { onCellClick, winner };
+  } = useContext(GameContext);
 
   const rows = [];
 
@@ -42,13 +16,9 @@ export function Board({}) {
   }
 
   return (
-    <GameContext.Provider value={context}>
-      <div className="alert alert-info">
-        <strong>Player</strong> {player}
-      </div>
-
+    <>
       {winner && (
-        <div class="alert alert-success">
+        <div className="alert alert-success">
           <strong>Winner</strong> {winner}
         </div>
       )}
@@ -56,12 +26,6 @@ export function Board({}) {
       <div className="game-board container text-center">
         {rows.map((r) => r)}
       </div>
-
-      <div class="alert alert-light" role="alert">
-        <button type="button" className="btn btn-default" onClick={resetGame}>
-          Reset Game
-        </button>
-      </div>
-    </GameContext.Provider>
+    </>
   );
 }

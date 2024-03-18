@@ -2,7 +2,12 @@ import { useContext, useMemo } from "react";
 import { GameContext } from "../contexts/game";
 
 export function Square({ value = "", rowCount, cellCount }) {
-  const { onCellClick, winner } = useContext(GameContext);
+  const {
+    dispatch,
+    state: {
+      data: { winner, winningCells },
+    },
+  } = useContext(GameContext);
 
   const canSelect = !winner && !value;
 
@@ -11,17 +16,21 @@ export function Square({ value = "", rowCount, cellCount }) {
       return "lightgray";
     }
 
-    if (winner === value) {
-      return "lightgreen";
+    if (winningCells[rowCount]) {
+      if (winningCells[rowCount].includes(cellCount)) {
+        return "lightgreen";
+      }
     }
 
     return value === "X" ? "lightblue" : "lightcoral";
-  }, [winner, value]);
+  }, [value, winningCells, rowCount, cellCount]);
 
   return (
     <div
       className="col square"
-      onClick={() => onCellClick({ x: rowCount, y: cellCount })}
+      onClick={() =>
+        dispatch({ type: "CELL_CLICK", data: { x: rowCount, y: cellCount } })
+      }
       style={{
         cursor: canSelect ? "pointer" : "not-allowed",
         backgroundColor,
