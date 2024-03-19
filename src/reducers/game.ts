@@ -18,7 +18,6 @@ export const INITIAL_STATE: IState = {
 /*
  next:
   * add multi-game scoreboard, e.g. player 1 won 4, player 2 won 5
-  * no more moves - tied game
  */
 
 export function gameReducer(currentState: IState, action: Action): IState {
