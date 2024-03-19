@@ -1,13 +1,16 @@
+import { Action } from "../interfaces/IAction";
+import { Cell } from "../interfaces/IBoard";
+import { IState } from "../interfaces/IState";
 import { checkWinner, initializeBoard } from "../utils/game";
 
 const DEFAULT_BOARD_SIZE = 3;
 
-export const INITIAL_STATE = {
+export const INITIAL_STATE: IState = {
   data: {
     boardSize: DEFAULT_BOARD_SIZE,
     board: initializeBoard(DEFAULT_BOARD_SIZE),
-    player: "X",
-    winner: "",
+    player: Cell.x,
+    winner: Cell.empty,
     winningCells: {}, // looks like { rowID: [matchingColumn, matchingColumn]} e.g. { 1: [0, 1, 2]} or {0: [1], 1: [1], 2: [1]} or {0: [0], 1: [1], 2: [2]}
   },
 };
@@ -18,7 +21,8 @@ export const INITIAL_STATE = {
   * no more moves - tied game
  */
 
-export function gameReducer(currentState, { type, data }) {
+export function gameReducer(currentState: IState, action: Action): IState {
+  const { type, data } = action;
   console.log("action", type, data);
   switch (type) {
     case "SET_BOARD_SIZE": {
@@ -59,7 +63,7 @@ export function gameReducer(currentState, { type, data }) {
         data: {
           ...currentState.data,
           board,
-          player: currentPlayer === "X" ? "O" : "X",
+          player: currentPlayer === Cell.x ? Cell.o : Cell.x,
           ...checkWinner(board, x, y),
         },
       };

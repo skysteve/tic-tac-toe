@@ -1,15 +1,16 @@
-import { useContext } from "react";
+import { ReactElement, useContext } from "react";
 import { Row } from "./row";
 import { GameContext } from "../contexts/game";
+import React from "react";
 
-export function Board({}) {
+export function Board() {
   const {
     state: {
       data: { board, winner },
     },
   } = useContext(GameContext);
 
-  const rows = [];
+  const rows: ReactElement[] = [];
 
   for (let i = 0; i < board.length; i++) {
     rows.push(<Row key={i} row={board[i]} rowCount={i} />);

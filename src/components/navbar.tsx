@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { GameContext } from "../contexts/game";
 
 const availableBoardSizes = [3, 5, 7, 9];
@@ -56,7 +56,7 @@ export function NavBar() {
             <li className="nav-item">
               <span
                 className="nav-link active"
-                onClick={() => dispatch({ type: "RESET" })}
+                onClick={() => dispatch({ type: "RESET", data: null })}
               >
                 Reset
               </span>
@@ -68,10 +68,10 @@ export function NavBar() {
             </li> */}
           </ul>
           {winner ? null : (
-            <ul class="nav nav-pills navbar-right">
-              <li class="nav-item">
+            <ul className="nav nav-pills navbar-right">
+              <li className="nav-item">
                 <a
-                  class="nav-link active"
+                  className="nav-link active"
                   aria-current="page"
                   href="#"
                   style={{

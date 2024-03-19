@@ -1,11 +1,11 @@
+import React, { useReducer } from "react";
 import { Board } from "./components/board";
-import "./App.css";
 import { NavBar } from "./components/navbar";
-import { useReducer } from "react";
 import { INITIAL_STATE, gameReducer } from "./reducers/game";
 import { GameContext } from "./contexts/game";
+import "./App.css";
 
-function App() {
+export function App() {
   const [state, dispatch] = useReducer(gameReducer, INITIAL_STATE);
 
   const context = {
@@ -24,5 +24,3 @@ function App() {
     </GameContext.Provider>
   );
 }
-
-export default App;

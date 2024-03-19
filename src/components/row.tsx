@@ -1,7 +1,14 @@
+import React, { ReactElement } from "react";
 import { Square } from "./square";
+import { Cell } from "../interfaces/IBoard";
 
-export function Row({ row, rowCount }) {
-  const cells = [];
+interface RowProps {
+  row: Cell[];
+  rowCount: number;
+}
+
+export function Row({ row, rowCount }: RowProps) {
+  const cells: ReactElement[] = [];
 
   for (let i = 0; i < row.length; i++) {
     cells.push(
