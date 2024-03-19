@@ -36,7 +36,7 @@ export function NavBar() {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                Board Size
+                Board size
               </a>
               <ul className="dropdown-menu">
                 {availableBoardSizes.map((size) => (
@@ -77,6 +77,7 @@ export function NavBar() {
                   style={{
                     backgroundColor:
                       player === "X" ? "lightblue" : "lightcoral",
+                    cursor: "default",
                   }}
                 >
                   Player: {player}
