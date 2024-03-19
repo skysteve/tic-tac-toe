@@ -1,19 +1,21 @@
-export function initializeBoard(boardSize) {
-  const result = [];
+import { Cell, IBoard } from "../interfaces/IBoard";
+
+export function initializeBoard(boardSize: number) {
+  const result: IBoard = [];
 
   for (let i = 0; i < boardSize; i++) {
     result[i] = [];
     for (let j = 0; j < boardSize; j++) {
-      result[i][j] = "";
+      result[i][j] = Cell.empty;
     }
   }
 
   return result;
 }
 
-export function checkWinner(board, lastX, lastY) {
+export function checkWinner(board: IBoard, lastX: number, lastY: number) {
   const lastPlayer = board[lastX][lastY];
-  let winningCells = {};
+  let winningCells: { [key: number]: number[] } = {};
 
   // checkRow
   const rowMatch = board[lastX].every((c) => c === lastPlayer);

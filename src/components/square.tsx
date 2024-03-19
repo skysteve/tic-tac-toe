@@ -1,7 +1,19 @@
 import { useContext, useMemo } from "react";
 import { GameContext } from "../contexts/game";
+import React from "react";
+import { Cell } from "../interfaces/IBoard";
 
-export function Square({ value = "", rowCount, cellCount }) {
+interface SquareProps {
+  value: Cell;
+  rowCount: number;
+  cellCount: number;
+}
+
+export function Square({
+  value = Cell.empty,
+  rowCount,
+  cellCount,
+}: SquareProps) {
   const {
     dispatch,
     state: {
