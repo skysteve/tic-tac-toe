@@ -7,4 +7,6 @@ export type Action =
         x: number;
         y: number;
       };
-    };
+    }
+  | { type: "SET_GAME_TYPE"; data: "PVP" | "PVC" }
+  | { type: "COMPUTER_PLAY"; data: null };

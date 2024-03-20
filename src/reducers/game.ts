@@ -1,12 +1,18 @@
 import { Action } from "../interfaces/IAction";
 import { Cell } from "../interfaces/IBoard";
 import { IState } from "../interfaces/IState";
-import { checkWinner, initializeBoard } from "../utils/game";
+import {
+  checkWinner,
+  computerPlacePieceRandom,
+  initializeBoard,
+} from "../utils/game";
 
 const DEFAULT_BOARD_SIZE = 3;
 
 export const INITIAL_STATE: IState = {
   data: {
+    canPlayerMove: true,
+    gameType: "PVC",
     boardSize: DEFAULT_BOARD_SIZE,
     board: initializeBoard(DEFAULT_BOARD_SIZE),
     player: Cell.x,
@@ -64,6 +70,43 @@ export function gameReducer(currentState: IState, action: Action): IState {
           board,
           player: currentPlayer === Cell.x ? Cell.o : Cell.x,
           ...checkWinner(board, x, y),
+          canPlayerMove: currentState.data.gameType === "PVP",
+        },
+      };
+    }
+    case "COMPUTER_PLAY": {
+      if (currentState.data.gameType === "PVP") {
+        return currentState;
+      }
+
+      if (currentState.data.winner) {
+        return currentState;
+      }
+
+      const board = JSON.parse(JSON.stringify(currentState.data.board));
+
+      const computerMove = computerPlacePieceRandom(
+        board,
+        currentState.data.player
+      );
+
+      return {
+        ...currentState,
+        data: {
+          ...currentState.data,
+          board: computerMove.board,
+          player: currentState.data.player === Cell.x ? Cell.o : Cell.x,
+          ...checkWinner(computerMove.board, computerMove.x, computerMove.y),
+          canPlayerMove: true,
+        },
+      };
+    }
+    case "SET_GAME_TYPE": {
+      return {
+        ...currentState,
+        data: {
+          ...currentState.data,
+          gameType: data,
         },
       };
     }

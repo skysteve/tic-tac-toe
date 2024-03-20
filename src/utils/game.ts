@@ -14,6 +14,11 @@ export function initializeBoard(boardSize: number) {
 }
 
 export function checkWinner(board: IBoard, lastX: number, lastY: number) {
+  // guard for tied game
+  if (lastX < 0 && lastY < 0) {
+    return {};
+  }
+
   const lastPlayer = board[lastX][lastY];
   let winningCells: { [key: number]: number[] } = {};
 
@@ -64,4 +69,41 @@ export function checkWinner(board: IBoard, lastX: number, lastY: number) {
   }
 
   return { winner: lastPlayer, winningCells };
+}
+
+function randomIntBetween(min: number = 0, max: number) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+/**
+ * Simple algorithm to place a piece randomly on the board
+ * @param board
+ * @param player
+ * @returns
+ */
+export function computerPlacePieceRandom(board: IBoard, player: Cell) {
+  let placed = false;
+  let placedX = 0;
+  let placedY = 0;
+
+  // guard for tied game
+  if (board.every((row) => row.every((cell) => cell !== Cell.empty))) {
+    return { board, x: -1, y: -1 };
+  }
+
+  while (!placed) {
+    placedX = randomIntBetween(0, board.length - 1);
+    placedY = randomIntBetween(0, board.length - 1);
+
+    if (board[placedX][placedY] === Cell.empty) {
+      board[placedX][placedY] = player;
+      placed = true;
+    }
+  }
+
+  return {
+    board,
+    x: placedX,
+    y: placedY,
+  };
 }

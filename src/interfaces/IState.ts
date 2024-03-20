@@ -2,6 +2,8 @@ import { Cell, IBoard } from "./IBoard";
 
 export interface IState {
   data: {
+    gameType: "PVP" | "PVC";
+    canPlayerMove: boolean;
     boardSize: number;
     board: IBoard;
     player: Cell;
