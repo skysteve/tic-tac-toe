@@ -8,7 +8,7 @@ export function NavBar() {
   const {
     dispatch,
     state: {
-      data: { player, winner, gameType },
+      data: { player, winner, gameType, difficulty },
     },
   } = useContext(GameContext);
 
@@ -82,6 +82,49 @@ export function NavBar() {
                 </li>
               </ul>
             </li>
+            {gameType === "PVC" && (
+              <li className="nav-item dropdown">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Difficulty
+                </a>
+                <ul className="dropdown-menu">
+                  <li>
+                    <span
+                      className="dropdown-item"
+                      onClick={() =>
+                        dispatch({ type: "SET_DIFFICULTY", data: "easy" })
+                      }
+                      style={{
+                        backgroundColor:
+                          difficulty === "easy" ? "lightgreen" : "",
+                      }}
+                    >
+                      Easy
+                    </span>
+                  </li>
+                  <li>
+                    <span
+                      className="dropdown-item"
+                      onClick={() =>
+                        dispatch({ type: "SET_DIFFICULTY", data: "hard" })
+                      }
+                      style={{
+                        backgroundColor:
+                          difficulty === "hard" ? "lightgreen" : "",
+                      }}
+                    >
+                      Hard
+                    </span>
+                  </li>
+                </ul>
+              </li>
+            )}
             <li className="nav-item">
               <span
                 className="nav-link active"

@@ -9,4 +9,5 @@ export type Action =
       };
     }
   | { type: "SET_GAME_TYPE"; data: "PVP" | "PVC" }
-  | { type: "COMPUTER_PLAY"; data: null };
+  | { type: "COMPUTER_PLAY"; data: null }
+  | { type: "SET_DIFFICULTY"; data: "easy" | "hard" };

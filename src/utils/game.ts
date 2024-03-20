@@ -107,3 +107,7 @@ export function computerPlacePieceRandom(board: IBoard, player: Cell) {
     y: placedY,
   };
 }
+
+export function computerPlaceMoveMinMax(board: IBoard, player: Cell) {
+  return computerPlacePieceRandom(board, player);
+}

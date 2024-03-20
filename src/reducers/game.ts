@@ -3,6 +3,7 @@ import { Cell } from "../interfaces/IBoard";
 import { IState } from "../interfaces/IState";
 import {
   checkWinner,
+  computerPlaceMoveMinMax,
   computerPlacePieceRandom,
   initializeBoard,
 } from "../utils/game";
@@ -13,6 +14,7 @@ export const INITIAL_STATE: IState = {
   data: {
     canPlayerMove: true,
     gameType: "PVC",
+    difficulty: "easy",
     boardSize: DEFAULT_BOARD_SIZE,
     board: initializeBoard(DEFAULT_BOARD_SIZE),
     player: Cell.x,
@@ -85,10 +87,22 @@ export function gameReducer(currentState: IState, action: Action): IState {
 
       const board = JSON.parse(JSON.stringify(currentState.data.board));
 
-      const computerMove = computerPlacePieceRandom(
-        board,
-        currentState.data.player
-      );
+      let computerMove;
+      switch (currentState.data.difficulty) {
+        case "easy": {
+          computerMove = computerPlacePieceRandom(
+            board,
+            currentState.data.player
+          );
+          break;
+        }
+        case "hard": {
+          computerMove = computerPlaceMoveMinMax(
+            board,
+            currentState.data.player
+          );
+        }
+      }
 
       return {
         ...currentState,
@@ -107,6 +121,15 @@ export function gameReducer(currentState: IState, action: Action): IState {
         data: {
           ...currentState.data,
           gameType: data,
+        },
+      };
+    }
+    case "SET_DIFFICULTY": {
+      return {
+        ...currentState,
+        data: {
+          ...currentState.data,
+          difficulty: data,
         },
       };
     }
