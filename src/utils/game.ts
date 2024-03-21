@@ -1,5 +1,6 @@
 import { Cell, IBoard } from "../interfaces/IBoard";
 import { IMove } from "../interfaces/IMove";
+import { Difficulty } from "../interfaces/difficulty";
 import { miniMax } from "./miniMax";
 
 export function cloneBoard(board: IBoard): IBoard {
@@ -147,11 +148,16 @@ export function computerPlacePieceRandom(board: IBoard, player: Cell) {
 export function computerPlaceMoveMinMax(
   board: IBoard,
   player: Cell,
-  lastMove: IMove
+  lastMove: IMove,
+  difficulty: Difficulty
 ) {
-  const result = miniMax(board, player, lastMove, player);
+  const maxDepth =
+    difficulty === "hard"
+      ? Number.MAX_SAFE_INTEGER
+      : (board.length * board.length) / 2;
 
-  console.log("Score", result);
+  const result = miniMax(board, player, lastMove, player, maxDepth);
+
   const move = result?.move;
 
   if (move && board[move.x][move.y] === Cell.empty) {

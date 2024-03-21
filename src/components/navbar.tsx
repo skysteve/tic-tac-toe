@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useContext } from "react";
 import { GameContext } from "../contexts/game";
+import { Difficulty } from "../interfaces/difficulty";
 
 const availableBoardSizes = [3, 5, 7, 9];
 
@@ -94,34 +95,22 @@ export function NavBar() {
                   Difficulty
                 </a>
                 <ul className="dropdown-menu">
-                  <li>
-                    <span
-                      className="dropdown-item"
-                      onClick={() =>
-                        dispatch({ type: "SET_DIFFICULTY", data: "easy" })
-                      }
-                      style={{
-                        backgroundColor:
-                          difficulty === "easy" ? "lightgreen" : "",
-                      }}
-                    >
-                      Easy
-                    </span>
-                  </li>
-                  <li>
-                    <span
-                      className="dropdown-item"
-                      onClick={() =>
-                        dispatch({ type: "SET_DIFFICULTY", data: "hard" })
-                      }
-                      style={{
-                        backgroundColor:
-                          difficulty === "hard" ? "lightgreen" : "",
-                      }}
-                    >
-                      Hard
-                    </span>
-                  </li>
+                  {Object.values(Difficulty).map((d) => (
+                    <li key={d}>
+                      <span
+                        className="dropdown-item"
+                        onClick={() =>
+                          dispatch({ type: "SET_DIFFICULTY", data: d })
+                        }
+                        style={{
+                          backgroundColor: difficulty === d ? "lightgreen" : "",
+                          textTransform: "capitalize",
+                        }}
+                      >
+                        {d}
+                      </span>
+                    </li>
+                  ))}
                 </ul>
               </li>
             )}

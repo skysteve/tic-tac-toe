@@ -35,6 +35,7 @@ export function miniMax(
   player: Cell,
   lastMove: IMove,
   computerPlayer: Cell,
+  maxDepth = -1,
   depth = 0
 ): { score: number; move?: IMove } {
   let score = scoreBoard(board, computerPlayer, lastMove);
@@ -49,16 +50,26 @@ export function miniMax(
     return { score: 0 };
   }
 
+  if (maxDepth < 0) {
+    maxDepth = Number.MAX_SAFE_INTEGER;
+  }
+
   const scores = availableMoves
     .map((move) => {
       const newBoard = cloneBoard(board);
       newBoard[move.x][move.y] = player;
       const nextPlayer = getNextPlayer(player);
+
+      if (depth > maxDepth) {
+        return { score, move };
+      }
+
       const res = miniMax(
         newBoard,
         nextPlayer,
         move,
         computerPlayer,
+        maxDepth,
         depth + 1
       );
 

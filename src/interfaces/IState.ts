@@ -1,10 +1,11 @@
 import { Cell, IBoard } from "./IBoard";
 import { IMove } from "./IMove";
+import { Difficulty } from "./difficulty";
 
 export interface IState {
   data: {
     gameType: "PVP" | "PVC";
-    difficulty: "easy" | "hard";
+    difficulty: Difficulty;
     lastMove: IMove;
     canPlayerMove: boolean;
     boardSize: number;

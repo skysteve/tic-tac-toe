@@ -1,4 +1,5 @@
 import { IMove } from "./IMove";
+import { Difficulty } from "./difficulty";
 
 export type Action =
   | { type: "SET_BOARD_SIZE"; data: number } // data = boardSize
@@ -9,4 +10,4 @@ export type Action =
     }
   | { type: "SET_GAME_TYPE"; data: "PVP" | "PVC" }
   | { type: "COMPUTER_PLAY"; data: null }
-  | { type: "SET_DIFFICULTY"; data: "easy" | "hard" };
+  | { type: "SET_DIFFICULTY"; data: Difficulty };

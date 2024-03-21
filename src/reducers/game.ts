@@ -1,6 +1,7 @@
 import { Action } from "../interfaces/IAction";
 import { Cell } from "../interfaces/IBoard";
 import { IState } from "../interfaces/IState";
+import { Difficulty } from "../interfaces/difficulty";
 import {
   checkWinner,
   cloneBoard,
@@ -20,7 +21,7 @@ export const INITIAL_STATE: IState = {
       y: -1,
     },
     gameType: "PVC",
-    difficulty: "hard",
+    difficulty: Difficulty.medium,
     boardSize: DEFAULT_BOARD_SIZE,
     board: initializeBoard(DEFAULT_BOARD_SIZE),
     player: Cell.x,
@@ -101,24 +102,22 @@ export function gameReducer(currentState: IState, action: Action): IState {
 
       let computerMove;
       switch (currentState.data.difficulty) {
-        case "easy": {
+        case Difficulty.easy: {
           computerMove = computerPlacePieceRandom(
             board,
             currentState.data.player
           );
           break;
         }
-        case "hard": {
+        case Difficulty.medium:
+        case Difficulty.hard: {
           computerMove = computerPlaceMoveMinMax(
             board,
             currentState.data.player,
-            currentState.data.lastMove
+            currentState.data.lastMove,
+            currentState.data.difficulty
           );
         }
-      }
-
-      if (!computerMove.board) {
-        debugger;
       }
 
       return {
@@ -146,13 +145,16 @@ export function gameReducer(currentState: IState, action: Action): IState {
       };
     }
     case "SET_DIFFICULTY": {
-      return {
-        ...currentState,
-        data: {
-          ...currentState.data,
-          difficulty: data,
+      return gameReducer(
+        {
+          ...currentState,
+          data: {
+            ...currentState.data,
+            difficulty: data,
+          },
         },
-      };
+        { type: "RESET", data: null }
+      );
     }
     default: {
       throw new Error(`Unknown action ${type}`);
