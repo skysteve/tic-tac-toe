@@ -3,8 +3,10 @@ import { Cell } from "../interfaces/IBoard";
 import { IState } from "../interfaces/IState";
 import {
   checkWinner,
+  cloneBoard,
   computerPlaceMoveMinMax,
   computerPlacePieceRandom,
+  getNextPlayer,
   initializeBoard,
 } from "../utils/game";
 
@@ -13,8 +15,12 @@ const DEFAULT_BOARD_SIZE = 3;
 export const INITIAL_STATE: IState = {
   data: {
     canPlayerMove: true,
+    lastMove: {
+      x: -1,
+      y: -1,
+    },
     gameType: "PVC",
-    difficulty: "easy",
+    difficulty: "hard",
     boardSize: DEFAULT_BOARD_SIZE,
     board: initializeBoard(DEFAULT_BOARD_SIZE),
     player: Cell.x,
@@ -51,11 +57,13 @@ export function gameReducer(currentState: IState, action: Action): IState {
           boardSize: currentState.data.boardSize,
           board: initializeBoard(currentState.data.boardSize),
           player: currentState.data.player,
+          gameType: currentState.data.gameType,
+          difficulty: currentState.data.difficulty,
         },
       };
     }
     case "CELL_CLICK": {
-      const board = JSON.parse(JSON.stringify(currentState.data.board));
+      const board = cloneBoard(currentState.data.board);
       const { x, y } = data;
       const { player: currentPlayer, winner } = currentState.data;
 
@@ -70,9 +78,13 @@ export function gameReducer(currentState: IState, action: Action): IState {
         data: {
           ...currentState.data,
           board,
-          player: currentPlayer === Cell.x ? Cell.o : Cell.x,
+          player: getNextPlayer(currentPlayer),
           ...checkWinner(board, x, y),
           canPlayerMove: currentState.data.gameType === "PVP",
+          lastMove: {
+            x,
+            y,
+          },
         },
       };
     }
@@ -85,7 +97,7 @@ export function gameReducer(currentState: IState, action: Action): IState {
         return currentState;
       }
 
-      const board = JSON.parse(JSON.stringify(currentState.data.board));
+      const board = cloneBoard(currentState.data.board);
 
       let computerMove;
       switch (currentState.data.difficulty) {
@@ -99,9 +111,14 @@ export function gameReducer(currentState: IState, action: Action): IState {
         case "hard": {
           computerMove = computerPlaceMoveMinMax(
             board,
-            currentState.data.player
+            currentState.data.player,
+            currentState.data.lastMove
           );
         }
+      }
+
+      if (!computerMove.board) {
+        debugger;
       }
 
       return {
@@ -109,9 +126,13 @@ export function gameReducer(currentState: IState, action: Action): IState {
         data: {
           ...currentState.data,
           board: computerMove.board,
-          player: currentState.data.player === Cell.x ? Cell.o : Cell.x,
+          player: getNextPlayer(currentState.data.player),
           ...checkWinner(computerMove.board, computerMove.x, computerMove.y),
           canPlayerMove: true,
+          lastMove: {
+            x: computerMove.x,
+            y: computerMove.y,
+          },
         },
       };
     }

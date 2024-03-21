@@ -1,4 +1,18 @@
 import { Cell, IBoard } from "../interfaces/IBoard";
+import { IMove } from "../interfaces/IMove";
+import { miniMax } from "./miniMax";
+
+export function cloneBoard(board: IBoard): IBoard {
+  return JSON.parse(JSON.stringify(board));
+}
+
+export function getNextPlayer(currentPlayer: Cell): Cell {
+  if (currentPlayer === Cell.x) {
+    return Cell.o;
+  }
+
+  return Cell.x;
+}
 
 export function initializeBoard(boardSize: number) {
   const result: IBoard = [];
@@ -20,6 +34,7 @@ export function checkWinner(board: IBoard, lastX: number, lastY: number) {
   }
 
   const lastPlayer = board[lastX][lastY];
+  const maxCell = board.length - 1;
   let winningCells: { [key: number]: number[] } = {};
 
   // checkRow
@@ -51,17 +66,36 @@ export function checkWinner(board: IBoard, lastX: number, lastY: number) {
   }
 
   // check diagonals
+  if (lastX === 0 && lastY === 2) {
+    debugger;
+  }
 
   // if X, Y isn't one of the corners, no point continuing
   if (
-    (lastX !== 0 && lastX !== board.length - 1) ||
-    (lastY !== 0 && lastY !== board.length - 1)
+    (lastX !== 0 && lastX !== maxCell) ||
+    (lastY !== 0 && lastY !== maxCell)
   ) {
     return {};
   }
 
+  let foundWinner = true;
+
   // work through diagonals
   for (let i = 0, j = 0; i < board.length; i++, j++) {
+    if (board[i][j] !== lastPlayer) {
+      foundWinner = false;
+      break;
+    }
+    winningCells[i] = [j];
+  }
+
+  if (foundWinner) {
+    return { winner: lastPlayer, winningCells };
+  }
+
+  winningCells = {};
+
+  for (let i = maxCell, j = 0; i >= 0; i--, j++) {
     if (board[i][j] !== lastPlayer) {
       return {};
     }
@@ -91,9 +125,11 @@ export function computerPlacePieceRandom(board: IBoard, player: Cell) {
     return { board, x: -1, y: -1 };
   }
 
+  const maxCell = board.length - 1;
+
   while (!placed) {
-    placedX = randomIntBetween(0, board.length - 1);
-    placedY = randomIntBetween(0, board.length - 1);
+    placedX = randomIntBetween(0, maxCell);
+    placedY = randomIntBetween(0, maxCell);
 
     if (board[placedX][placedY] === Cell.empty) {
       board[placedX][placedY] = player;
@@ -108,6 +144,23 @@ export function computerPlacePieceRandom(board: IBoard, player: Cell) {
   };
 }
 
-export function computerPlaceMoveMinMax(board: IBoard, player: Cell) {
-  return computerPlacePieceRandom(board, player);
+export function computerPlaceMoveMinMax(
+  board: IBoard,
+  player: Cell,
+  lastMove: IMove
+) {
+  const result = miniMax(board, player, lastMove, player);
+
+  console.log("Score", result);
+  const move = result?.move;
+
+  if (move && board[move.x][move.y] === Cell.empty) {
+    board[move.x][move.y] = player;
+  }
+
+  return {
+    board,
+    x: move?.x ?? -1,
+    y: move?.y ?? -1,
+  };
 }

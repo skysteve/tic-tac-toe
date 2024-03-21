@@ -1,6 +1,5 @@
-import { useContext, useMemo, useState } from "react";
+import React, { useContext, useMemo } from "react";
 import { GameContext } from "../contexts/game";
-import React from "react";
 import { Cell } from "../interfaces/IBoard";
 
 interface SquareProps {
