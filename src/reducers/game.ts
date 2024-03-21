@@ -40,15 +40,16 @@ export function gameReducer(currentState: IState, action: Action): IState {
   console.log("action", type, data);
   switch (type) {
     case "SET_BOARD_SIZE": {
-      return {
-        ...currentState,
-        data: {
-          ...INITIAL_STATE.data,
-          boardSize: data,
-          board: initializeBoard(data),
-          player: currentState.data.player,
+      return gameReducer(
+        {
+          ...currentState,
+          data: {
+            ...currentState.data,
+            boardSize: data,
+          },
         },
-      };
+        { type: "RESET", data: null }
+      );
     }
     case "RESET": {
       return {
@@ -69,7 +70,7 @@ export function gameReducer(currentState: IState, action: Action): IState {
       const { player: currentPlayer, winner } = currentState.data;
 
       // if there's already a winner or player in that slot, bail out
-      if (board[x][y] || winner) {
+      if (board[x][y] !== Cell.empty || winner) {
         return currentState;
       }
 
@@ -136,13 +137,16 @@ export function gameReducer(currentState: IState, action: Action): IState {
       };
     }
     case "SET_GAME_TYPE": {
-      return {
-        ...currentState,
-        data: {
-          ...currentState.data,
-          gameType: data,
+      return gameReducer(
+        {
+          ...currentState,
+          data: {
+            ...currentState.data,
+            gameType: data,
+          },
         },
-      };
+        { type: "RESET", data: null }
+      );
     }
     case "SET_DIFFICULTY": {
       return gameReducer(

@@ -28,7 +28,12 @@ export function initializeBoard(boardSize: number) {
   return result;
 }
 
-export function checkWinner(board: IBoard, lastX: number, lastY: number) {
+export function checkWinner(
+  board: IBoard,
+  lastX: number,
+  lastY: number,
+  includeWinningCells: boolean = true
+) {
   // guard for tied game
   if (lastX < 0 && lastY < 0) {
     return {};
@@ -42,6 +47,10 @@ export function checkWinner(board: IBoard, lastX: number, lastY: number) {
   const rowMatch = board[lastX].every((c) => c === lastPlayer);
 
   if (rowMatch) {
+    if (!includeWinningCells) {
+      return { winner: lastPlayer, winningCells };
+    }
+
     winningCells[lastX] = [];
     for (let i = 0; i < board[lastX].length; i++) {
       winningCells[lastX].push(i);
@@ -60,23 +69,13 @@ export function checkWinner(board: IBoard, lastX: number, lastY: number) {
   }
 
   if (colMatch) {
+    if (!includeWinningCells) {
+      return { winner: lastPlayer, winningCells };
+    }
     for (let i = 0; i < board[lastX].length; i++) {
       winningCells[i] = [lastY];
     }
     return { winner: lastPlayer, winningCells };
-  }
-
-  // check diagonals
-  if (lastX === 0 && lastY === 2) {
-    debugger;
-  }
-
-  // if X, Y isn't one of the corners, no point continuing
-  if (
-    (lastX !== 0 && lastX !== maxCell) ||
-    (lastY !== 0 && lastY !== maxCell)
-  ) {
-    return {};
   }
 
   let foundWinner = true;
@@ -151,10 +150,10 @@ export function computerPlaceMoveMinMax(
   lastMove: IMove,
   difficulty: Difficulty
 ) {
-  const maxDepth =
+  let maxDepth =
     difficulty === "hard"
       ? Number.MAX_SAFE_INTEGER
-      : (board.length * board.length) / 2;
+      : (board.length * board.length) / 3;
 
   const result = miniMax(board, player, lastMove, player, maxDepth);
 
