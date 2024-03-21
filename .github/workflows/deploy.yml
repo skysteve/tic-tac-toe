@@ -24,8 +24,7 @@ jobs:
         with:
           name: github-pages
           path: |
-            build
-            !build/**/*.md
+            build/
 
   deploy:
     needs: build
