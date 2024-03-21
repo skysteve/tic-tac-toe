@@ -3,7 +3,7 @@ import { IMove } from "../interfaces/IMove";
 import { checkWinner, cloneBoard, getNextPlayer } from "./game";
 
 export function scoreBoard(board: IBoard, player: Cell, lastMove: IMove) {
-  const winner = checkWinner(board, lastMove.x, lastMove.y)?.winner;
+  const winner = checkWinner(board, lastMove.x, lastMove.y, false)?.winner;
   // if computer wins return 10
   if (winner === player) {
     return 10;
@@ -15,7 +15,7 @@ export function scoreBoard(board: IBoard, player: Cell, lastMove: IMove) {
   return 0;
 }
 
-function getAvailableMoves(board: IBoard) {
+export function getAvailableMoves(board: IBoard) {
   let results = [];
 
   for (let x = 0; x < board.length; x++) {
@@ -28,6 +28,34 @@ function getAvailableMoves(board: IBoard) {
   }
 
   return results;
+}
+
+export function getBestMove(
+  scores: { score: number; move: IMove }[],
+  getHighest: boolean
+) {
+  let bestMove = {
+    score: getHighest ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER,
+    move: { x: -1, y: -1 },
+  };
+
+  if (getHighest) {
+    for (let i = 0; i < scores.length; i++) {
+      let tmp = scores[i];
+      if (tmp.score > bestMove.score) {
+        bestMove = tmp;
+      }
+    }
+  } else {
+    for (let i = 0; i < scores.length; i++) {
+      let tmp = scores[i];
+      if (tmp.score < bestMove.score) {
+        bestMove = tmp;
+      }
+    }
+  }
+
+  return bestMove;
 }
 
 export function miniMax(
@@ -54,33 +82,26 @@ export function miniMax(
     maxDepth = Number.MAX_SAFE_INTEGER;
   }
 
-  const scores = availableMoves
-    .map((move) => {
-      const newBoard = cloneBoard(board);
-      newBoard[move.x][move.y] = player;
-      const nextPlayer = getNextPlayer(player);
+  const scores = availableMoves.map((move) => {
+    const newBoard = cloneBoard(board);
+    newBoard[move.x][move.y] = player;
+    const nextPlayer = getNextPlayer(player);
 
-      if (depth > maxDepth) {
-        return { score, move };
-      }
+    if (depth > maxDepth) {
+      return { score, move };
+    }
 
-      const res = miniMax(
-        newBoard,
-        nextPlayer,
-        move,
-        computerPlayer,
-        maxDepth,
-        depth + 1
-      );
+    const res = miniMax(
+      newBoard,
+      nextPlayer,
+      move,
+      computerPlayer,
+      maxDepth,
+      depth + 1
+    );
 
-      return { score: res.score, move };
-    })
-    .sort((a, b) => {
-      if (player === computerPlayer) {
-        return b.score - a.score;
-      }
-      return a.score - b.score;
-    }); // sort high to low
+    return { score: res.score, move };
+  });
 
-  return scores[0];
+  return getBestMove(scores, player === computerPlayer);
 }
