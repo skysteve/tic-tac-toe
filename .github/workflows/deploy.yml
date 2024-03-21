@@ -9,16 +9,16 @@ on:
       - main
 
 jobs:
-  # test:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Use Node.js
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: "20.x"
-  #     - run: npm ci
-  #     - run: npm test
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+      - run: npm ci
+      - run: npm test
 
   build:
     runs-on: ubuntu-latest
@@ -28,36 +28,35 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20.x"
-      # - run: npm ci
-      # - run: npm run build
-      # - name: Archive production artifacts
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: github-pages
-      #     path: |
-      #       build/**/*
-      - run: mkdir -p path/to/artifact
-      - run: echo hello > path/to/artifact/world.txt
-      - uses: actions/upload-artifact@v4
+      - run: npm ci
+      - run: npm run build
+      - name: Fix permissions
+        run: |
+          chmod -c -R +rX "build/" | while read line; do
+            echo "::warning title=Invalid file permissions automatically fixed::$line"
+          done
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v4
         with:
-          name: my-artifact
-          path: path/to/artifact/world.txt
+          name: github-pages
+          path: |
+            build/**/*
 
-  # deploy:
-  #   needs: [build, test]
-  #   permissions:
-  #     pages: write # to deploy to Pages
-  #     id-token: write # to verify the deployment originates from an appropriate source
+  deploy:
+    needs: [build, test]
+    permissions:
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
 
-  #   # Deploy to the github-pages environment
-  #   environment:
-  #     name: github-pages
-  #     url: ${{ steps.deployment.outputs.page_url }}
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
-  #   # Specify runner + deployment step
-  #   runs-on: ubuntu-latest
+    # Specify runner + deployment step
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Deploy to GitHub Pages
-  #       id: deployment
-  #       uses: actions/deploy-pages@v4
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
