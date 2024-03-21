@@ -66,11 +66,6 @@ export function checkWinner(board: IBoard, lastX: number, lastY: number) {
     return { winner: lastPlayer, winningCells };
   }
 
-  // check diagonals
-  if (lastX === 0 && lastY === 2) {
-    debugger;
-  }
-
   // if X, Y isn't one of the corners, no point continuing
   if (
     (lastX !== 0 && lastX !== maxCell) ||
