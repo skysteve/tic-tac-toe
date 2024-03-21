@@ -1,18 +1,34 @@
 import { Cell, IBoard } from "../interfaces/IBoard";
 import { IMove } from "../interfaces/IMove";
 import { Difficulty } from "../interfaces/difficulty";
+import { playerType } from "../interfaces/playerType";
 import { miniMax } from "./miniMax";
 
 export function cloneBoard(board: IBoard): IBoard {
   return JSON.parse(JSON.stringify(board));
 }
 
-export function getNextPlayer(currentPlayer: Cell): Cell {
+export function getNextPlayer(currentPlayer: Cell): Cell.x | Cell.o {
   if (currentPlayer === Cell.x) {
     return Cell.o;
   }
 
   return Cell.x;
+}
+
+export function getStartingPlayer(
+  lastStarter: playerType,
+  gameType: "PVP" | "PVC"
+): playerType {
+  if (gameType === "PVP") {
+    return "human";
+  }
+
+  if (lastStarter === "computer") {
+    return "human";
+  }
+
+  return "computer";
 }
 
 export function initializeBoard(boardSize: number) {
