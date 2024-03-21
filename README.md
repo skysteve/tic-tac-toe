@@ -4,4 +4,4 @@
 
 # Deploying
 
-Run `npm run deploy`
+Push to main and github actions will deploy
