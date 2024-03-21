@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useContext } from "react";
 import { GameContext } from "../contexts/game";
+import { Difficulty } from "../interfaces/difficulty";
 
 const availableBoardSizes = [3, 5, 7, 9];
 
@@ -8,7 +9,7 @@ export function NavBar() {
   const {
     dispatch,
     state: {
-      data: { player, winner },
+      data: { player, winner, gameType, difficulty },
     },
   } = useContext(GameContext);
 
@@ -18,16 +19,6 @@ export function NavBar() {
         <span className="navbar-brand">Tic Tac Toe</span>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            {/* <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="#">
-                Home
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">
-                Link
-              </a>
-            </li> */}
             <li className="nav-item dropdown">
               <a
                 className="nav-link dropdown-toggle"
@@ -53,6 +44,76 @@ export function NavBar() {
                 ))}
               </ul>
             </li>
+            <li className="nav-item dropdown">
+              <a
+                className="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Game Type
+              </a>
+              <ul className="dropdown-menu">
+                <li>
+                  <span
+                    className="dropdown-item"
+                    onClick={() =>
+                      dispatch({ type: "SET_GAME_TYPE", data: "PVP" })
+                    }
+                    style={{
+                      backgroundColor: gameType === "PVP" ? "lightgreen" : "",
+                    }}
+                  >
+                    Player v Player
+                  </span>
+                </li>
+                <li>
+                  <span
+                    className="dropdown-item"
+                    onClick={() =>
+                      dispatch({ type: "SET_GAME_TYPE", data: "PVC" })
+                    }
+                    style={{
+                      backgroundColor: gameType === "PVC" ? "lightgreen" : "",
+                    }}
+                  >
+                    Player v Computer
+                  </span>
+                </li>
+              </ul>
+            </li>
+            {gameType === "PVC" && (
+              <li className="nav-item dropdown">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Difficulty
+                </a>
+                <ul className="dropdown-menu">
+                  {Object.values(Difficulty).map((d) => (
+                    <li key={d}>
+                      <span
+                        className="dropdown-item"
+                        onClick={() =>
+                          dispatch({ type: "SET_DIFFICULTY", data: d })
+                        }
+                        style={{
+                          backgroundColor: difficulty === d ? "lightgreen" : "",
+                          textTransform: "capitalize",
+                        }}
+                      >
+                        {d}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            )}
             <li className="nav-item">
               <span
                 className="nav-link active"
@@ -61,11 +122,6 @@ export function NavBar() {
                 Reset
               </span>
             </li>
-            {/* <li className="nav-item">
-              <a className="nav-link disabled" aria-disabled="true">
-                Disabled
-              </a>
-            </li> */}
           </ul>
           {winner ? null : (
             <ul className="nav nav-pills navbar-right">

@@ -10,6 +10,14 @@ interface AlertProps {
 
 function Alert({ isTie, winner }: AlertProps) {
   const { dispatch } = useContext(GameContext);
+  if (winner) {
+    return (
+      <div className="alert alert-success">
+        <strong>Winner</strong> {winner}
+      </div>
+    );
+  }
+
   if (isTie) {
     return (
       <div className="alert alert-info d-flex justify-content-between align-items-center">
@@ -20,14 +28,6 @@ function Alert({ isTie, winner }: AlertProps) {
         >
           New Game
         </button>
-      </div>
-    );
-  }
-
-  if (winner) {
-    return (
-      <div className="alert alert-success">
-        <strong>Winner</strong> {winner}
       </div>
     );
   }

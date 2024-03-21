@@ -1,12 +1,27 @@
 import { Action } from "../interfaces/IAction";
 import { Cell } from "../interfaces/IBoard";
 import { IState } from "../interfaces/IState";
-import { checkWinner, initializeBoard } from "../utils/game";
+import { Difficulty } from "../interfaces/difficulty";
+import {
+  checkWinner,
+  cloneBoard,
+  computerPlaceMoveMinMax,
+  computerPlacePieceRandom,
+  getNextPlayer,
+  initializeBoard,
+} from "../utils/game";
 
 const DEFAULT_BOARD_SIZE = 3;
 
 export const INITIAL_STATE: IState = {
   data: {
+    canPlayerMove: true,
+    lastMove: {
+      x: -1,
+      y: -1,
+    },
+    gameType: "PVC",
+    difficulty: Difficulty.medium,
     boardSize: DEFAULT_BOARD_SIZE,
     board: initializeBoard(DEFAULT_BOARD_SIZE),
     player: Cell.x,
@@ -43,11 +58,13 @@ export function gameReducer(currentState: IState, action: Action): IState {
           boardSize: currentState.data.boardSize,
           board: initializeBoard(currentState.data.boardSize),
           player: currentState.data.player,
+          gameType: currentState.data.gameType,
+          difficulty: currentState.data.difficulty,
         },
       };
     }
     case "CELL_CLICK": {
-      const board = JSON.parse(JSON.stringify(currentState.data.board));
+      const board = cloneBoard(currentState.data.board);
       const { x, y } = data;
       const { player: currentPlayer, winner } = currentState.data;
 
@@ -62,10 +79,82 @@ export function gameReducer(currentState: IState, action: Action): IState {
         data: {
           ...currentState.data,
           board,
-          player: currentPlayer === Cell.x ? Cell.o : Cell.x,
+          player: getNextPlayer(currentPlayer),
           ...checkWinner(board, x, y),
+          canPlayerMove: currentState.data.gameType === "PVP",
+          lastMove: {
+            x,
+            y,
+          },
         },
       };
+    }
+    case "COMPUTER_PLAY": {
+      if (currentState.data.gameType === "PVP") {
+        return currentState;
+      }
+
+      if (currentState.data.winner) {
+        return currentState;
+      }
+
+      const board = cloneBoard(currentState.data.board);
+
+      let computerMove;
+      switch (currentState.data.difficulty) {
+        case Difficulty.easy: {
+          computerMove = computerPlacePieceRandom(
+            board,
+            currentState.data.player
+          );
+          break;
+        }
+        case Difficulty.medium:
+        case Difficulty.hard: {
+          computerMove = computerPlaceMoveMinMax(
+            board,
+            currentState.data.player,
+            currentState.data.lastMove,
+            currentState.data.difficulty
+          );
+        }
+      }
+
+      return {
+        ...currentState,
+        data: {
+          ...currentState.data,
+          board: computerMove.board,
+          player: getNextPlayer(currentState.data.player),
+          ...checkWinner(computerMove.board, computerMove.x, computerMove.y),
+          canPlayerMove: true,
+          lastMove: {
+            x: computerMove.x,
+            y: computerMove.y,
+          },
+        },
+      };
+    }
+    case "SET_GAME_TYPE": {
+      return {
+        ...currentState,
+        data: {
+          ...currentState.data,
+          gameType: data,
+        },
+      };
+    }
+    case "SET_DIFFICULTY": {
+      return gameReducer(
+        {
+          ...currentState,
+          data: {
+            ...currentState.data,
+            difficulty: data,
+          },
+        },
+        { type: "RESET", data: null }
+      );
     }
     default: {
       throw new Error(`Unknown action ${type}`);

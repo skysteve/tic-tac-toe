@@ -1,6 +1,5 @@
-import { useContext, useMemo } from "react";
+import React, { useContext, useMemo } from "react";
 import { GameContext } from "../contexts/game";
-import React from "react";
 import { Cell } from "../interfaces/IBoard";
 
 interface SquareProps {
@@ -17,11 +16,10 @@ export function Square({
   const {
     dispatch,
     state: {
-      data: { winner, winningCells },
+      data: { winner, winningCells, gameType, canPlayerMove },
     },
   } = useContext(GameContext);
-
-  const canSelect = !winner && !value;
+  const canSelect = canPlayerMove && !winner && !value;
 
   const backgroundColor = useMemo(() => {
     if (!value) {
@@ -40,9 +38,20 @@ export function Square({
   return (
     <div
       className="col square"
-      onClick={() =>
-        dispatch({ type: "CELL_CLICK", data: { x: rowCount, y: cellCount } })
-      }
+      onClick={() => {
+        if (!canSelect) {
+          return;
+        }
+
+        dispatch({ type: "CELL_CLICK", data: { x: rowCount, y: cellCount } });
+
+        if (gameType === "PVC") {
+          // timeout here so it's not too aggressive to the user
+          setTimeout(() => {
+            dispatch({ type: "COMPUTER_PLAY", data: null });
+          }, 500);
+        }
+      }}
       style={{
         cursor: canSelect ? "pointer" : "not-allowed",
         backgroundColor,
