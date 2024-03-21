@@ -35,7 +35,7 @@ jobs:
         with:
           name: github-pages
           path: |
-            build/
+            build/**/*
 
   # deploy:
   #   needs: [build, test]
