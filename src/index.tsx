@@ -1,8 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { App } from "./App";
-// import reportWebVitals from "./reportWebVitals";
 import "./index.css";
+import init from "./_wasm-algorithm/wasm_algorithm";
+
+// init wasm - TODO, might need to check this resolves but ok for now
+init();
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
