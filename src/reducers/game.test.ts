@@ -48,6 +48,8 @@ describe("Game Reducer", () => {
     const state: IState = JSON.parse(JSON.stringify(INITIAL_STATE));
     const action: Action = { type: "SET_BOARD_SIZE", data: 5 };
 
+    state.data.gameType = "PVP";
+
     expect(state.data.boardSize).toEqual(3);
     state.data.board[0][1] = Cell.x;
     state.data.winningCells = { 1: [] };
@@ -58,7 +60,7 @@ describe("Game Reducer", () => {
       data: {
         canPlayerMove: true,
         lastMove: { x: -1, y: -1 },
-        gameType: "PVC",
+        gameType: "PVP",
         difficulty: "medium",
         boardSize: 5,
         board: [
@@ -71,6 +73,7 @@ describe("Game Reducer", () => {
         player: "X",
         winner: "",
         winningCells: {},
+        startingPlayer: "human",
       },
     });
   });
@@ -85,6 +88,7 @@ describe("Game Reducer", () => {
     state.data.lastMove = { x: 1, y: 2 };
     state.data.winner = Cell.x;
     state.data.difficulty = Difficulty.easy;
+    state.data.gameType = "PVP";
 
     const result = gameReducer(state, action);
 
@@ -92,7 +96,7 @@ describe("Game Reducer", () => {
       data: {
         canPlayerMove: true,
         lastMove: { x: -1, y: -1 },
-        gameType: "PVC",
+        gameType: "PVP",
         difficulty: "easy",
         boardSize: 3,
         board: [
@@ -103,6 +107,7 @@ describe("Game Reducer", () => {
         player: "O",
         winner: "",
         winningCells: {},
+        startingPlayer: "human",
       },
     });
   });
@@ -129,6 +134,7 @@ describe("Game Reducer", () => {
         player: "X",
         winner: "",
         winningCells: {},
+        startingPlayer: "human",
       },
     });
   });
@@ -174,6 +180,7 @@ describe("Game Reducer", () => {
           player: "O",
           winner: "",
           winningCells: {},
+          startingPlayer: "human",
         },
       });
     });
@@ -200,6 +207,7 @@ describe("Game Reducer", () => {
           player: "O",
           winner: "",
           winningCells: {},
+          startingPlayer: "human",
         },
       });
     });
@@ -235,6 +243,7 @@ describe("Game Reducer", () => {
             1: [0],
             2: [0],
           },
+          startingPlayer: "human",
         },
       });
     });

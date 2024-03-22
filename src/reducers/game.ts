@@ -8,6 +8,7 @@ import {
   computerPlaceMoveMinMax,
   computerPlacePieceRandom,
   getNextPlayer,
+  getStartingPlayer,
   initializeBoard,
 } from "../utils/game";
 
@@ -26,6 +27,7 @@ export const INITIAL_STATE: IState = {
     board: initializeBoard(DEFAULT_BOARD_SIZE),
     player: Cell.x,
     winner: Cell.empty,
+    startingPlayer: "human",
     winningCells: {}, // looks like { rowID: [matchingColumn, matchingColumn]} e.g. { 1: [0, 1, 2]} or {0: [1], 1: [1], 2: [1]} or {0: [0], 1: [1], 2: [2]}
   },
 };
@@ -52,7 +54,7 @@ export function gameReducer(currentState: IState, action: Action): IState {
       );
     }
     case "RESET": {
-      return {
+      const tmp = {
         ...INITIAL_STATE,
         data: {
           ...INITIAL_STATE.data,
@@ -61,8 +63,21 @@ export function gameReducer(currentState: IState, action: Action): IState {
           player: currentState.data.player,
           gameType: currentState.data.gameType,
           difficulty: currentState.data.difficulty,
+          startingPlayer: getStartingPlayer(
+            currentState.data.startingPlayer,
+            currentState.data.gameType
+          ),
         },
       };
+
+      if (
+        tmp.data.gameType === "PVC" &&
+        tmp.data.startingPlayer === "computer"
+      ) {
+        return gameReducer(tmp, { type: "COMPUTER_PLAY", data: null });
+      }
+
+      return tmp;
     }
     case "CELL_CLICK": {
       const board = cloneBoard(currentState.data.board);
