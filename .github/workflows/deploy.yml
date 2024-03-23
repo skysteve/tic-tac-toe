@@ -51,11 +51,11 @@ jobs:
             echo "::warning title=Invalid file permissions automatically fixed::$line"
           done
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-pages-artifact@v3
         with:
           name: github-pages
           path: |
-            build/**/*
+            build/
 
   deploy:
     needs: [build, test]
