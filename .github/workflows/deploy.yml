@@ -45,17 +45,16 @@ jobs:
           node-version: "20.x"
       - run: npm ci
       - run: npm run build
-      - name: Fix permissions
-        run: |
-          chmod -c -R +rX "build/" | while read line; do
-            echo "::warning title=Invalid file permissions automatically fixed::$line"
-          done
+      # - name: Fix permissions
+      #   run: |
+      #     chmod -c -R +rX "build/" | while read line; do
+      #       echo "::warning title=Invalid file permissions automatically fixed::$line"
+      #     done
       - name: Archive production artifacts
         uses: actions/upload-pages-artifact@v3
         with:
-          name: github-pages
           path: |
-            build/
+            build/**/*
 
   deploy:
     needs: [build, test]
