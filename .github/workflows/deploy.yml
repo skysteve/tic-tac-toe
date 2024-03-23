@@ -53,8 +53,7 @@ jobs:
       - name: Archive production artifacts
         uses: actions/upload-pages-artifact@v3
         with:
-          path: |
-            ./build
+          path: "./build/"
 
   deploy:
     needs: [build, test]
