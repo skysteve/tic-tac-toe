@@ -32,6 +32,26 @@ export const INITIAL_STATE: IState = {
   },
 };
 
+function capDifficulty(newState: IState) {
+  // ignore PVP games
+  if (newState.data.gameType === "PVP") {
+    return newState;
+  }
+
+  // until alpha/beta algorithm is implemented, prevent crashing the browser
+  if (
+    newState.data.difficulty !== Difficulty.easy &&
+    newState.data.boardSize > 3
+  ) {
+    newState.data.difficulty = Difficulty.easy;
+    alert(
+      "For board sizes greater than 3 the difficulty is capped at easy for the moment. (Otherwise your browser will crash)"
+    );
+  }
+
+  return newState;
+}
+
 /*
  next:
   * add multi-game scoreboard, e.g. player 1 won 4, player 2 won 5
@@ -42,16 +62,18 @@ export function gameReducer(currentState: IState, action: Action): IState {
   console.log("action", type, data);
   switch (type) {
     case "SET_BOARD_SIZE": {
-      return gameReducer(
-        {
-          ...currentState,
-          data: {
-            ...currentState.data,
-            boardSize: data,
-          },
+      const newState = {
+        ...currentState,
+        data: {
+          ...currentState.data,
+          boardSize: data,
         },
-        { type: "RESET", data: null }
-      );
+      };
+
+      return gameReducer(capDifficulty(newState), {
+        type: "RESET",
+        data: null,
+      });
     }
     case "RESET": {
       const tmp = {
@@ -153,25 +175,25 @@ export function gameReducer(currentState: IState, action: Action): IState {
     }
     case "SET_GAME_TYPE": {
       return gameReducer(
-        {
+        capDifficulty({
           ...currentState,
           data: {
             ...currentState.data,
             gameType: data,
           },
-        },
+        }),
         { type: "RESET", data: null }
       );
     }
     case "SET_DIFFICULTY": {
       return gameReducer(
-        {
+        capDifficulty({
           ...currentState,
           data: {
             ...currentState.data,
             difficulty: data,
           },
-        },
+        }),
         { type: "RESET", data: null }
       );
     }
