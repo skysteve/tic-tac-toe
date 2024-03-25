@@ -26,6 +26,10 @@ The player vs computer mode has 3 levels of difficulty (easy, medium, hard). For
 
 The medium and hard modes use the same minimax algorithm. This algorithm will play out all possible scenarios to a final winning state to determine if the computer will win or lose. It will then play the most optimum position to win the game. The hard mode is impossible to win against, the best you can do is draw. The medium version of the algorithm is capped at a given depth. This means the computer will try to work out the best possible move but can only get part way through this decision tree. This means it will try to avoid obvious negative scenarios but may not play the best possible move.
 
+## Deployments
+
+The code is deployed to Github Pages via a simple Github Action when there are changes to the `main` branch. Given my existing website already deployed to Github pages with DNS config etc already being in place, this free hosting solution was the quickest and easiest to get working.
+
 ## Known issues/limitations
 
 When playing against the computer, it is currently only possible to play in medium or hard modes on the 3x3 grid. This is because the minimax algorithm is recursive and quite expensive to compute. If you try to play against the computer in hard mode on a 5x5 grid you'll quickly crash the browser tab.
