@@ -29,7 +29,7 @@ export function App() {
           </div>
 
           <ul className="nav col-md-4 justify-content-end list-unstyled d-flex">
-            <li className="ms-3">
+            <li className="ms-1">
               <a
                 href="https://www.skysteve.com/"
                 className="nav-link px-2 text-body-secondary"
@@ -37,12 +37,20 @@ export function App() {
                 Home
               </a>
             </li>
-            <li className="ms-3">
+            <li className="ms-1">
               <a
                 href="https://github.com/skysteve/tic-tac-toe"
                 className="nav-link px-2 text-body-secondary"
               >
                 Source Code
+              </a>
+            </li>
+            <li className="ms-1">
+              <a
+                href="https://github.com/skysteve/tic-tac-toe?tab=readme-ov-file#about"
+                className="nav-link px-2 text-body-secondary"
+              >
+                About project
               </a>
             </li>
           </ul>
